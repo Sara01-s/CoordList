@@ -1,4 +1,3 @@
-<h1 align="center">CoordList</h1>
 <p align="center"><img src="https://github.com/Sara01-s/CoordList/blob/main/CoordList%20Logo.png" width="512" height="224"/></p>
 <p align="center">A Minecraft Spigot plugin to manage your world coords.</p>
 
