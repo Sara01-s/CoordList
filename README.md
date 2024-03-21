@@ -1,5 +1,5 @@
 ## See CoordList in action (Click to watch video)
-[![Watch the video](https://img.youtube.com/vi/ukuYi2r6qaE/maxresdefault.jpg)](https://youtu.be/ukuYi2r6qaE)
+[![Watch the video](https://img.youtube.com/vi/AHdTnn9kfqQ/maxresdefault.jpg)](https://youtu.be/AHdTnn9kfqQ)
 <p align="center">A Minecraft Spigot plugin to manage your world coords.</p>
 
 ## Commands
