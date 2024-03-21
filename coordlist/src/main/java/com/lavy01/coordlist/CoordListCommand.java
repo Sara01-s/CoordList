@@ -10,6 +10,7 @@ import java.util.List;
 import org.bukkit.util.Vector;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -37,11 +38,16 @@ public final class CoordListCommand implements TabExecutor {
             this.plugin.logError("Cannot execute this command from console.");
             return true;
         }
+
+        if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
+            player.sendMessage(this.plugin.NAME + ChatColor.RED + "Saving nether or end coords is not yet supported.");
+            return true;
+        }
         
         this.playerCoordList = this.plugin.getPlayerCoordList(player.getUniqueId());
 
         if (cmdArgs.length <= 0) {
-            player.sendMessage(plugin.NAME + ChatColor.RED + "help");
+            showHelp(player);
             return true;
         }
         
@@ -271,6 +277,10 @@ public final class CoordListCommand implements TabExecutor {
         this.coordTracker = new CoordTracker(player, this.plugin, currentPlayerPosFormatted, targetCoord);
         this.coordTracker.runTaskTimerAsynchronously(this.plugin, 0, 1);
 	}
+
+    private void showHelp(final Player player) {
+        player.sendMessage(this.plugin.NAME + ChatColor.RED + "Not implemented yet.");
+    }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {

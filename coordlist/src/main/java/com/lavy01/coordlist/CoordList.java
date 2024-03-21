@@ -6,7 +6,7 @@
 
     User commands:
         - Create command /coordlist help.
-        - Add TabCompleter.
+        - Add support for all dimensions
         - Add confirmation prompt to /coordlist clear.
         - Fix weird bug when trying to rename coords by using (e.g.) "/coords rename Mesa1 mesa" (if "Mesa1" doesn't exist but "Mesa" does. No feedback is given (what?)).
         - Disallow tracking when player is to close to destination.
