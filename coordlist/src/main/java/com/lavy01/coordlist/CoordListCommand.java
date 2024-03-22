@@ -306,12 +306,13 @@ public final class CoordListCommand implements TabExecutor {
 
     private void showHelp(final Player player) {
 		player.sendMessage(Utils.colorize(this.plugin.NAME + "&a---&8[&eHelp&8]&a---"));
-        player.sendMessage(ChatColor.YELLOW + "/coordlist add <name>, Add your current coords to your list.");
-        player.sendMessage(ChatColor.YELLOW + "/coordlist add <name> [x] [y] [z], Save custom to your list.");
-        player.sendMessage(ChatColor.YELLOW + "/coordlist remove <name>, Delete a saved coord from your list.");
-        player.sendMessage(ChatColor.YELLOW + "/coordlist view <name>, Displays a list of all your saved coords");
-        player.sendMessage(ChatColor.YELLOW + "/coordlist track <name>, Shows where is the indicated saved coord.");
-        player.sendMessage(ChatColor.YELLOW + "/coordlist rename <name> <new name>, Change the name of a saved coord without losing the original location.");
+        player.sendMessage(Utils.colorize("&e/coordlist add &6<name>, &7Adds your current coords to your list."));
+        player.sendMessage(Utils.colorize("&e/coordlist add &6<name> [x] [y] [z], &7Saves custom coords to your list."));
+        player.sendMessage(Utils.colorize("&e/coordlist remove &6<name>, &7Deletes a saved coord from your list."));
+        player.sendMessage(Utils.colorize("&e/coordlist view &6<name>, &7Displays a list of all your saved coords"));
+        player.sendMessage(Utils.colorize("&e/coordlist track &6<name>, &7Shows where is the indicated saved coord."));
+        player.sendMessage(Utils.colorize("&e/coordlist track &6[x] [y] [z], &7Shows where is the indicated custom coord."));
+        player.sendMessage(Utils.colorize("&e/coordlist rename &6<name> <new name>, &7Changes the name of a saved coord without losing the original location."));
     }
 
     @Override

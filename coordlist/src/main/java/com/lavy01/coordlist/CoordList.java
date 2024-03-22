@@ -5,7 +5,6 @@
     Playtest more.
 
     User commands:
-        - Create command /coordlist help.
         - Add support for all dimensions
         - Add confirmation prompt to /coordlist clear.
         - Fix weird bug when trying to rename coords by using (e.g.) "/coords rename Mesa1 mesa" (if "Mesa1" doesn't exist but "Mesa" does. No feedback is given (what?)).
