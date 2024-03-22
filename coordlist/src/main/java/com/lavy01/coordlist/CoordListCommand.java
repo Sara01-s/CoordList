@@ -279,7 +279,13 @@ public final class CoordListCommand implements TabExecutor {
 	}
 
     private void showHelp(final Player player) {
-        player.sendMessage(this.plugin.NAME + ChatColor.RED + "Not implemented yet.");
+		player.sendMessage(Utils.colorize(this.plugin.NAME + "&a---&8[&eHelp&8]&a---"));
+        player.sendMessage(ChatColor.YELLOW + "/coordlist add <name>, Add your current coords to your list.");
+        player.sendMessage(ChatColor.YELLOW + "/coordlist add <name> [x] [y] [z], Save custom to your list.");
+        player.sendMessage(ChatColor.YELLOW + "/coordlist remove <name>, Delete a saved coord from your list.");
+        player.sendMessage(ChatColor.YELLOW + "/coordlist view <name>, Displays a list of all your saved coords");
+        player.sendMessage(ChatColor.YELLOW + "/coordlist track <name>, Shows where is the indicated saved coord.");
+        player.sendMessage(ChatColor.YELLOW + "/coordlist rename <name> <new name>, Change the name of a saved coord without losing the original location.");
     }
 
     @Override
@@ -290,12 +296,12 @@ public final class CoordListCommand implements TabExecutor {
         }
 
         if (args.length == 1) {
-            return Arrays.asList("add", "remove", "view", "track", "rename", "clear");
+            return Arrays.asList("help", "add", "remove", "view", "track", "rename", "clear");
         }
 
         if (args[0].equalsIgnoreCase("rename")) {
             if (args.length == 3) {
-                return Arrays.asList("<new_name>");
+                return Arrays.asList("<new name>");
             }
 
             return this.plugin.getPlayerCoordsNames(player.getUniqueId());
