@@ -299,7 +299,6 @@ public final class CoordListCommand implements TabExecutor {
             this.coordTracker.cancel();
         }
 
-
         this.coordTracker = new CoordTracker(player, this.plugin, currentPlayerPosFormatted, tempTargetCoord);
         this.coordTracker.runTaskTimerAsynchronously(this.plugin, 0, 1);
 	}

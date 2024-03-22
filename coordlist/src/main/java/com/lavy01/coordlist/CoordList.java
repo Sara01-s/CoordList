@@ -1,5 +1,5 @@
 // CoordList Minecraft PLugin
-// © Copyright Sara San Martín 2024
+// by Sara San Martín 2024
 
 /* TO DO:
     Playtest more.
