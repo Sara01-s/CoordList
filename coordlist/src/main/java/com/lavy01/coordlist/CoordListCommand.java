@@ -32,7 +32,7 @@ public final class CoordListCommand implements TabExecutor {
     }
     
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] cmdArgs) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         
         if (!(sender instanceof final Player player)) {
             this.plugin.logError("Cannot execute this command from console.");
@@ -46,13 +46,13 @@ public final class CoordListCommand implements TabExecutor {
         
         this.playerCoordList = this.plugin.getPlayerCoordList(player.getUniqueId());
 
-        if (cmdArgs.length <= 0) {
+        if (args.length <= 0 || args[0].equalsIgnoreCase("help")) {
             showHelp(player);
             return true;
         }
         
-        if (cmdArgs[0].equalsIgnoreCase("view")) {
-            if (cmdArgs.length > 1) {
+        if (args[0].equalsIgnoreCase("view")) {
+            if (args.length > 1) {
                 player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Usage: /coordlist view");
                 return true;
             }
@@ -61,8 +61,8 @@ public final class CoordListCommand implements TabExecutor {
             return true;
         }
 
-        if (cmdArgs[0].equalsIgnoreCase("clear")) {
-            if (cmdArgs.length > 1) {
+        if (args[0].equalsIgnoreCase("clear")) {
+            if (args.length > 1) {
                 player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Usage: /coordlist clear");
                 return true;
             }
@@ -71,25 +71,25 @@ public final class CoordListCommand implements TabExecutor {
             return true;
         }
 
-        if (cmdArgs[0].equalsIgnoreCase("add")) {
-            if (cmdArgs.length == 5) { // Player wants to set Custom coords
-                var customCoord = getClampedCoords(cmdArgs[2], cmdArgs[3], cmdArgs[4]);
-                addCoord(player, cmdArgs[1], new Location(player.getWorld(), customCoord.getX(), customCoord.getY(), customCoord.getZ()));
+        if (args[0].equalsIgnoreCase("add")) {
+            if (args.length == 5) { // Player wants to set Custom coords
+                var customCoord = getClampedCoords(args[2], args[3], args[4]);
+                addCoord(player, args[1], new Location(player.getWorld(), customCoord.getX(), customCoord.getY(), customCoord.getZ()));
                 return true;
             }
 
-            if (cmdArgs.length <= 1) {
+            if (args.length <= 1) {
                 player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Usage: /coordlist add <name> [x] [y] [z]");
                 return true;
             }
 
-            addCoord(player, cmdArgs[1], player.getLocation());
+            addCoord(player, args[1], player.getLocation());
             return true;
         }
 
-        if (cmdArgs[0].equalsIgnoreCase("rename")) {
-            if (cmdArgs.length == 3) {
-                renameCoord(player, cmdArgs[1], cmdArgs[2]);
+        if (args[0].equalsIgnoreCase("rename")) {
+            if (args.length == 3) {
+                renameCoord(player, args[1], args[2]);
                 return true;
             }
 
@@ -97,18 +97,18 @@ public final class CoordListCommand implements TabExecutor {
             return true;
         }
 
-        if (cmdArgs[0].equalsIgnoreCase("remove")) {
-            if (cmdArgs.length <= 1) {
+        if (args[0].equalsIgnoreCase("remove")) {
+            if (args.length <= 1) {
                 player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Usage: /coordlist remove <name>");
                 return true;
             }
 
-            removeCoord(player, cmdArgs[1]);
+            removeCoord(player, args[1]);
             return true;
         }
 
-        if (cmdArgs[0].equalsIgnoreCase("track")) {
-            if (cmdArgs.length == 1) {
+        if (args[0].equalsIgnoreCase("track")) {
+            if (args.length == 1) {
                 if (!this.coordTracker.isCancelled()) {
 
                     this.coordTracker.cancel();
@@ -122,7 +122,15 @@ public final class CoordListCommand implements TabExecutor {
                 return true;
             }
 
-            startTrackingCoord(player, cmdArgs[1]);
+            if (args.length == 4) {
+                var customCoord = getClampedCoords(args[1], args[2], args[3]);
+                var targetLocation = new Location(player.getWorld(), customCoord.getX(), customCoord.getY(), customCoord.getZ());
+                
+                startTrackingCoord(player, targetLocation);
+                return true;
+            }
+
+            startTrackingCoord(player, args[1]);
             return true;
         }
         
@@ -210,7 +218,7 @@ public final class CoordListCommand implements TabExecutor {
 		}
 
         this.plugin.clearCoordList(player.getUniqueId());
-        player.sendMessage(plugin.NAME + ChatColor.WHITE + "Coordlist cleared.");
+        player.sendMessage(plugin.NAME + ChatColor.WHITE + "CoordList cleared.");
 	}
     
     private boolean isValidName(final Player player, final String name) {
@@ -275,6 +283,24 @@ public final class CoordListCommand implements TabExecutor {
         }
 
         this.coordTracker = new CoordTracker(player, this.plugin, currentPlayerPosFormatted, targetCoord);
+        this.coordTracker.runTaskTimerAsynchronously(this.plugin, 0, 1);
+	}
+
+    private void startTrackingCoord(final Player player, final Location targetLocation) {
+        final String currentPlayerPosFormatted = Coord.getFormattedLocation(player.getLocation());
+        final var tempTargetCoord = new Coord(targetLocation, "Custom");
+
+        if (!isValidCoord(player, new Coord(targetLocation, tempTargetCoord.getName()))) {
+            return;
+        }
+        
+        // Auto-Cancel current tracker if player switches target without cancelling before
+        if (this.coordTracker != null) { 
+            this.coordTracker.cancel();
+        }
+
+
+        this.coordTracker = new CoordTracker(player, this.plugin, currentPlayerPosFormatted, tempTargetCoord);
         this.coordTracker.runTaskTimerAsynchronously(this.plugin, 0, 1);
 	}
 
