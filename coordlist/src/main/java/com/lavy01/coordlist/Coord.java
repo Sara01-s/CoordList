@@ -10,7 +10,7 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import net.md_5.bungee.api.ChatColor;
 
 @SerializableAs("Coord")
-public class Coord implements ConfigurationSerializable, Cloneable {
+public final class Coord implements ConfigurationSerializable, Cloneable {
 
     private final Location location;
     private String name;

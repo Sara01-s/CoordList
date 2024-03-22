@@ -17,6 +17,11 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
 
 public final class CoordListCommand implements TabExecutor {
 	
@@ -50,7 +55,12 @@ public final class CoordListCommand implements TabExecutor {
             showHelp(player);
             return true;
         }
-        
+
+        if (args[0].equalsIgnoreCase("forceclear")) { // Prevent player for using this directly with permissions
+            forceClearCoordList(player);
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("view")) {
             if (args.length > 1) {
                 player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Usage: /coordlist view");
@@ -67,7 +77,7 @@ public final class CoordListCommand implements TabExecutor {
                 return true;
             }
 
-            clearCoordList(player);
+            showClearPrompt(player);
             return true;
         }
 
@@ -205,21 +215,40 @@ public final class CoordListCommand implements TabExecutor {
 			
 		for (int i = 0; i < this.playerCoordList.size(); i++) {
 			player.sendMessage(Utils.colorize (
-                "&a" + (i + 1 + "") + "&7" + ": " +
-                "&b" + this.playerCoordList.get(i).getName() + " ") +
-                ChatColor.GRAY + ">> " + this.playerCoordList.get(i).getFormattedCoords());
+                "&a" + (i + 1 + "") + "&7" + ": " 
+                + "&e" + this.playerCoordList.get(i).getName() + " ") 
+                + ChatColor.GRAY + ">> " 
+                + this.playerCoordList.get(i).getFormattedCoords()
+            );
 		}
 	}
 
-    private void clearCoordList(final Player player) {
+    private void showClearPrompt(final Player player) {
         if (this.playerCoordList == null || this.playerCoordList.isEmpty()) {
 			player.sendMessage(this.plugin.NAME + ChatColor.RED + "CoordList already empty.");
 			return;
 		}
 
+        player.sendMessage(this.plugin.NAME + ChatColor.RED + "WARNING! this command will DELETE ALL your saved coords.");
+
+        final var promptYes = new TextComponent(ChatColor.GRAY + "- " + ChatColor.GREEN + ChatColor.UNDERLINE + "[yes]");
+            promptYes.setClickEvent(new ClickEvent(Action.RUN_COMMAND, "/coordlist forceclear"));
+            promptYes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
+                                    new ComponentBuilder(ChatColor.GREEN + "Clear your coordlist").create()));
+
+        final var promptNo = new TextComponent(ChatColor.GRAY + "- " + ChatColor.RED + ChatColor.UNDERLINE + "[no]");
+            promptNo.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
+                                   new ComponentBuilder(ChatColor.RED + "Cancel").create()));
+
+        player.sendMessage(ChatColor.BOLD + "" + ChatColor.GOLD + "Confirm coordlist clear?");
+        player.spigot().sendMessage(promptYes);
+        player.spigot().sendMessage(promptNo);
+	}
+
+    private void forceClearCoordList(final Player player) {
         this.plugin.clearCoordList(player.getUniqueId());
         player.sendMessage(plugin.NAME + ChatColor.WHITE + "CoordList cleared.");
-	}
+    }
     
     private boolean isValidName(final Player player, final String name) {
 	    final String validCharacters = "[a-zA-Z0-9_]*";

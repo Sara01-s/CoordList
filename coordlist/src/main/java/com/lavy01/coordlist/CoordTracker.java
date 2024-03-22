@@ -17,7 +17,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class CoordTracker extends BukkitRunnable {
+public final class CoordTracker extends BukkitRunnable {
 
     private final String TRACKER_OBJECTIVE_NAME = "coordTracker";
     private final String TARGET_COORDS_NAME_KEY = ChatColor.YELLOW + "Tracking: ";

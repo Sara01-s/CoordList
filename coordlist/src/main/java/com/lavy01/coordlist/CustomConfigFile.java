@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class CustomConfigFile<T extends JavaPlugin> {
+public final class CustomConfigFile<T extends JavaPlugin> {
     
 	private final T plugin;
     private final String configFileName;

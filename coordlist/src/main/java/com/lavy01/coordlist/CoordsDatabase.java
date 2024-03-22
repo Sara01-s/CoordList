@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class CoordsDatabase {
+public final class CoordsDatabase {
 
     public final HashMap<UUID, List<Coord>> playerCoords = new HashMap<>();
     private final String PLAYERS_DATA_ENTRY = "playerIds.";
