@@ -33,6 +33,8 @@ public final class CoordTracker extends BukkitRunnable {
     private HashMap<Double, String> angleToArrow = new HashMap<>();
     private HashMap<String, ChatColor> arrowToChatColor = new HashMap<>();
 
+    private boolean canRun = false;
+
     public double getDistanceToTarget() {
         return this.distanceToTarget;
     }
@@ -45,10 +47,7 @@ public final class CoordTracker extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (this.player == null) {
-            Bukkit.getServer().getLogger().severe("[CoordList] Please call initTracker() before scheduling Coord Tracker.");
-            return;
-        }
+        if (!canRun) return;
 
         if (this.player.getScoreboard() != null && this.player.getScoreboard().getObjective(this.TRACKER_OBJECTIVE_NAME) != null) {
             updateTracker(this.player, Coord.getFormattedLocation(this.player.getLocation()), targetCoord);
@@ -68,6 +67,13 @@ public final class CoordTracker extends BukkitRunnable {
         this.targetCoord = targetCoord;
         this.player = player;
 
+        this.distanceToTarget = player.getLocation().distance(targetCoord.getLocation());
+
+        if (distanceToTarget < MIN_DISTANCE_TO_STOP_TRACKING) {
+            player.sendMessage(plugin.NAME + ChatColor.RED + "You are too close to your target destination!");
+            return;
+        }
+
         populateMaps();
 
         final var scoreBoard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -85,6 +91,7 @@ public final class CoordTracker extends BukkitRunnable {
         player.setScoreboard(scoreBoard);
 
         showTracker(objective, currentCoord, targetCoord);
+        canRun = true;
     }
 
     private void showTracker(final Objective objective, final String currentCoords, final Coord targetCoord) {

@@ -7,7 +7,6 @@
     User commands:
         - Add support for all dimensions
         - Fix weird bug when trying to rename coords by using (e.g.) "/coords rename Mesa1 mesa" (if "Mesa1" doesn't exist but "Mesa" does. No feedback is given (what?)).
-        - Disallow tracking when player is to close to destination.
 
     Admin commands (op):
         - /coordlist spy <player> (displays a player's list).
