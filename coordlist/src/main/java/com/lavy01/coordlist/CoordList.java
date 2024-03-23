@@ -4,9 +4,6 @@
 /* TO DO:
     Playtest more.
 
-    User commands:
-        - Fix weird bug when trying to rename coords by using (e.g.) "/coords rename Mesa1 mesa" (if "Mesa1" doesn't exist but "Mesa" does. No feedback is given (what?)).
-    
     Admin commands (op):
         - /coordlist spy <player> (displays a player's list).
         - /coordlist clear <player> (forcefully deletes all saved coordinates of a player).
