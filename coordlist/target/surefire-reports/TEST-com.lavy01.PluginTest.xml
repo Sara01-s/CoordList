@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.lavy01.PluginTest" time="0.039" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.lavy01.PluginTest" time="0.046" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="ES"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\sarao\AppData\Local\Temp\surefire15572202117323224687\surefirebooter9709591028348042979.jar C:\Users\sarao\AppData\Local\Temp\surefire15572202117323224687 2024-03-22T22-16-20_731-jvmRun1 surefire3670527964668455731tmp surefire_011139381490572667116tmp"/>
+    <property name="sun.java.command" value="C:\Users\sarao\AppData\Local\Temp\surefire4956478214728341211\surefirebooter7619309882042039287.jar C:\Users\sarao\AppData\Local\Temp\surefire4956478214728341211 2024-03-22T22-19-11_065-jvmRun1 surefire357410174642540221tmp surefire_01558486360139848720tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="c:\Users\sarao\Escritorio\OpenSource\Minecraft Java Plugins\Java\CoordList2\coordlist\target\test-classes;c:\Users\sarao\Escritorio\OpenSource\Minecraft Java Plugins\Java\CoordList2\coordlist\target\classes;C:\Users\sarao\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\sarao\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\sarao\.m2\repository\org\spigotmc\spigot-api\1.15.1-R0.1-SNAPSHOT\spigot-api-1.15.1-R0.1-SNAPSHOT.jar;C:\Users\sarao\.m2\repository\commons-lang\commons-lang\2.6\commons-lang-2.6.jar;C:\Users\sarao\.m2\repository\com\google\guava\guava\21.0\guava-21.0.jar;C:\Users\sarao\.m2\repository\com\google\code\gson\gson\2.8.0\gson-2.8.0.jar;C:\Users\sarao\.m2\repository\net\md-5\bungeecord-chat\1.13-SNAPSHOT\bungeecord-chat-1.13-SNAPSHOT.jar;C:\Users\sarao\.m2\repository\org\yaml\snakeyaml\1.25\snakeyaml-1.25.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\sarao\AppData\Local\Temp\surefire15572202117323224687\surefirebooter9709591028348042979.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\sarao\AppData\Local\Temp\surefire4956478214728341211\surefirebooter7619309882042039287.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.2+13-LTS-58"/>
