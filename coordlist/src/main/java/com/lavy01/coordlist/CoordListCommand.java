@@ -38,7 +38,6 @@ public final class CoordListCommand implements TabExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        
         if (!(sender instanceof final Player player)) {
             this.plugin.logError("Cannot execute this command from console.");
             return true;

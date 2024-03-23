@@ -5,14 +5,14 @@
     Playtest more.
 
     User commands:
-        - Add support for all dimensions
         - Fix weird bug when trying to rename coords by using (e.g.) "/coords rename Mesa1 mesa" (if "Mesa1" doesn't exist but "Mesa" does. No feedback is given (what?)).
-
+    
     Admin commands (op):
         - /coordlist spy <player> (displays a player's list).
         - /coordlist clear <player> (forcefully deletes all saved coordinates of a player).
-
+    
     Future considerations (Maybe I won't do it, but it would be great additions for the plugin):
+        - Add support for all dimensions
         - Add command aliases "cl"
         - Abstract the command logic to divide and make the CoordListCommand.java file more readable.
         - Implement permissions logic.
