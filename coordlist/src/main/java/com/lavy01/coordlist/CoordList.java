@@ -114,7 +114,6 @@ public final class CoordList extends JavaPlugin {
         return coordNames;
     }
 
-
     public void log(final String message) {
         this.getLogger().info(message);
     }

@@ -1,5 +1,6 @@
 package com.lavy01.coordlist;
 
+import static java.lang.Math.max;
 import static java.lang.Math.abs;
 import static java.lang.Math.clamp;
 
@@ -26,6 +27,7 @@ import net.md_5.bungee.api.chat.ClickEvent.Action;
 public final class CoordListCommand implements TabExecutor {
 	
     private final int MAX_COORDS_PER_PLAYER = 5;
+    private final int MAX_COORD_NAME_CHARACTERS = 16;
     private final CoordList plugin;
     
 	private List<Coord> playerCoordList = new ArrayList<>();
@@ -35,16 +37,19 @@ public final class CoordListCommand implements TabExecutor {
     public CoordListCommand(final CoordList plugin) {
         this.plugin = plugin;
     }
+
+    private void msg(final String message, final Player player) {
+        player.sendMessage(this.plugin.NAME + ChatColor.WHITE + message);
+    }
+
+    private void msgError(final String message, final Player player) {
+        player.sendMessage(this.plugin.NAME + ChatColor.RED + message);
+    }
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof final Player player)) {
             this.plugin.logError("Cannot execute this command from console.");
-            return true;
-        }
-
-        if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
-            player.sendMessage(this.plugin.NAME + ChatColor.RED + "Saving nether or end coords is not yet supported.");
             return true;
         }
         
@@ -62,7 +67,7 @@ public final class CoordListCommand implements TabExecutor {
 
         if (args[0].equalsIgnoreCase("view")) {
             if (args.length > 1) {
-                player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Usage: /coordlist view");
+                msg("Usage: /coordlist view", player);
                 return true;
             }
 
@@ -72,11 +77,31 @@ public final class CoordListCommand implements TabExecutor {
 
         if (args[0].equalsIgnoreCase("clear")) {
             if (args.length > 1) {
-                player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Usage: /coordlist clear");
+                msg("Usage: /coordlist clear", player);
                 return true;
             }
 
             showClearPrompt(player);
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("rename")) {
+            if (args.length == 3) {
+                renameCoord(player, args[1], args[2]);
+                return true;
+            }
+
+            msg("Usage: /coordlist rename <name> <new name>", player);
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("remove")) {
+            if (args.length <= 1) {
+                msg("Usage: /coordlist remove <name>", player);
+                return true;
+            }
+
+            removeCoord(player, args[1]);
             return true;
         }
 
@@ -88,7 +113,7 @@ public final class CoordListCommand implements TabExecutor {
             }
 
             if (args.length <= 1) {
-                player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Usage: /coordlist add <name> [x] [y] [z]");
+                msg("Usage: /coordlist add <name> [x] [y] [z]", player);
                 return true;
             }
 
@@ -96,38 +121,25 @@ public final class CoordListCommand implements TabExecutor {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("rename")) {
-            if (args.length == 3) {
-                renameCoord(player, args[1], args[2]);
-                return true;
-            }
-
-            player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Usage: /coordlist rename <name> <newName>");
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("remove")) {
-            if (args.length <= 1) {
-                player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Usage: /coordlist remove <name>");
-                return true;
-            }
-
-            removeCoord(player, args[1]);
-            return true;
-        }
-
         if (args[0].equalsIgnoreCase("track")) {
             if (args.length == 1) {
-                if (!this.coordTracker.isCancelled()) {
+                if (this.coordTracker != null) {
+                    if (!this.coordTracker.isCancelled()) {
 
-                    this.coordTracker.cancel();
-
-                    player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-                    player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Tracking canceled.");
-                    return true;
+                        this.coordTracker.cancel();
+    
+                        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+                        msg("Tracking canceled.", player);
+                        return true;
+                    }
                 }
 
-                player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "Usage: /coordlist track <name>");
+                msg("Usage: /coordlist track <name>", player);
+                return true;
+            }
+
+            if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
+                msgError("Saving or tracking nether/end coords is not yet supported.", player);
                 return true;
             }
 
@@ -146,10 +158,17 @@ public final class CoordListCommand implements TabExecutor {
         return true;
     }
 
+
+
 	private void addCoord(final Player player, final String coordName, final Location location) {
-        // I use abs(MAX_COORDS) because I've seen things... horrible things...
-        if (this.playerCoordList.size() >= abs(MAX_COORDS_PER_PLAYER)) {
-            player.sendMessage(plugin.NAME + ChatColor.RED + "Max coords limit reached! (" + MAX_COORDS_PER_PLAYER + "/" + this.playerCoordList.size() + ").");
+        if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
+            msgError("Saving or tracking nether/end coords is not yet supported.", player);
+            return;
+        }
+
+        // I use max(1, MAX_COORDS) because MAX COORDS must never be <= 0.
+        if (this.playerCoordList.size() >= max(1, MAX_COORDS_PER_PLAYER)) {
+            msgError("Max coords limit reached! (" + MAX_COORDS_PER_PLAYER + "/" + this.playerCoordList.size() + ").", player);
             return;
         }
 
@@ -163,31 +182,29 @@ public final class CoordListCommand implements TabExecutor {
 
 		this.plugin.addCoord(player.getUniqueId(), new Coord(location, coordName));
 		
-		player.sendMessage(plugin.NAME + 
-				ChatColor.WHITE + "Coord " + ChatColor.YELLOW + coordName + ChatColor.WHITE + " added to your list.");
+		msg("Coord " + ChatColor.YELLOW + coordName + ChatColor.WHITE + " added to your list.", player);
 	}
 
-    private void renameCoord(final Player player, final String coordName, String newCoordName) {
+    private void renameCoord(final Player player, final String coordName, final String newCoordName) {
         if (!isValidName(player, newCoordName)) {
             return;
         }
 
-        for (var coord: playerCoordList) {
-            if (coord.getName().equals(newCoordName)) {
-                player.sendMessage(plugin.NAME + ChatColor.RED + 
-                                    "That is the same name.");
-                return;
-            }
-            if (coord.getName().equalsIgnoreCase(coordName)) {
-                this.plugin.renameCoord(player.getUniqueId(), coordName, newCoordName);
-                player.sendMessage(plugin.NAME + ChatColor.WHITE + 
-                                    "Coord " + coordName + " renamed to: " + ChatColor.YELLOW + newCoordName);
-                return;
-            }
+        if (coordName.equals(newCoordName)) {
+            msgError("That is the same name.", player);
+            return;
         }
-        
-        player.sendMessage(plugin.NAME + ChatColor.RED + 
-                            "A Coord named \"" + coordName + "\" is not present in your list.");
+
+        var playerId = player.getUniqueId();
+        var coordBeingRenamed = this.plugin.getCoordByName(playerId, coordName);
+
+        if (!this.plugin.playerHasCoord(playerId, coordBeingRenamed)) {
+            msgError("A Coord named \"" + coordName + "\" is not present in your list.", player);
+            return;
+        }
+
+        this.plugin.renameCoord(player.getUniqueId(), coordName, newCoordName);
+        msg(Utils.colorize("Coord &e" + coordName + " &frenamed to: &e" + newCoordName), player);
     }
 
     private void removeCoord(final Player player, final String coordName) {
@@ -195,22 +212,21 @@ public final class CoordListCommand implements TabExecutor {
 
         if (this.plugin.playerHasCoord(player.getUniqueId(), coord)) {
             this.plugin.removeCoord(player.getUniqueId(), coord);
-            player.sendMessage(plugin.NAME + ChatColor.WHITE + "Coord " + ChatColor.YELLOW + coordName + ChatColor.WHITE + " removed.");
+            msg("Coord " + ChatColor.YELLOW + coordName + ChatColor.WHITE + " removed.", player);
             return;
         }
 
-        player.sendMessage(plugin.NAME + ChatColor.RED + "Coord not found.");
+        msgError("A Coord named \"" + coordName + "\" is not present in your list.", player);
     }
 
 	
 	private void displayCoordList(final Player player) {
 		if (this.playerCoordList == null || this.playerCoordList.isEmpty()) {
-			player.sendMessage(this.plugin.NAME + ChatColor.WHITE + "CoordList empty.");
+			msg("CoordList empty.", player);
 			return;
 		}
 		
-		player.sendMessage(Utils.colorize(this.plugin.NAME +
-				"&a---&8[&eYour saved coords&8]&a---"));
+		msg(Utils.colorize("&a---&8[&eYour saved coords&8]&a---"), player);
 			
 		for (int i = 0; i < this.playerCoordList.size(); i++) {
 			player.sendMessage(Utils.colorize (
@@ -224,11 +240,11 @@ public final class CoordListCommand implements TabExecutor {
 
     private void showClearPrompt(final Player player) {
         if (this.playerCoordList == null || this.playerCoordList.isEmpty()) {
-			player.sendMessage(this.plugin.NAME + ChatColor.RED + "CoordList already empty.");
+			msgError("CoordList already empty.", player);
 			return;
 		}
 
-        player.sendMessage(this.plugin.NAME + ChatColor.RED + "WARNING! this command will DELETE ALL your saved coords.");
+        msgError("WARNING! this command will DELETE ALL your saved coords.", player);
 
         final var promptYes = new TextComponent(ChatColor.GRAY + "- " + ChatColor.GREEN + ChatColor.UNDERLINE + "[yes]");
             promptYes.setClickEvent(new ClickEvent(Action.RUN_COMMAND, "/coordlist forceclear"));
@@ -246,21 +262,19 @@ public final class CoordListCommand implements TabExecutor {
 
     private void forceClearCoordList(final Player player) {
         this.plugin.clearCoordList(player.getUniqueId());
-        player.sendMessage(plugin.NAME + ChatColor.WHITE + "CoordList cleared.");
+        msg("CoordList cleared.", player);
     }
     
-    private boolean isValidName(final Player player, final String name) {
+    private boolean isValidName(final Player player, final String coordName) {
 	    final String validCharacters = "[a-zA-Z0-9_]*";
-		
-		if (!name.matches(validCharacters)) {
-			player.sendMessage(plugin.NAME + 
-					ChatColor.RED + "Name can only contain letters or numbers.");
+
+		if (!coordName.matches(validCharacters)) {
+			msgError("Name can only contain letters or numbers.", player);
 			return false;
 		}
         
-		if (name.length() >= 16) {
-			player.sendMessage(plugin.NAME + 
-					ChatColor.RED + "Name cannot exceed 16 characters.");
+		if (coordName.length() >= MAX_COORD_NAME_CHARACTERS) {
+			msgError("Name cannot exceed " + MAX_COORD_NAME_CHARACTERS + " characters.", player);
 			return false;
 		}
 
@@ -283,12 +297,12 @@ public final class CoordListCommand implements TabExecutor {
         final double z = abs(coord.getLocation().getZ());
     
         if (x > 29_999_970 || y > 255 || z > 29_999_970) {
-            player.sendMessage(plugin.NAME + ChatColor.RED + "Specified coords out of world bounds.");
+            msgError("Specified coords out of world bounds.", player);
             return false;
         }
 
         if (this.plugin.playerHasCoord(player.getUniqueId(), coord)) {
-            player.sendMessage(plugin.NAME + ChatColor.RED + "A coord with name " + ChatColor.YELLOW + coord.getName() + ChatColor.RED + " is already present in your list.");
+            msgError("A coord with name " + ChatColor.YELLOW + coord.getName() + ChatColor.RED + " is already present in your list.", player);
             return false;
         }
         
@@ -299,7 +313,7 @@ public final class CoordListCommand implements TabExecutor {
         final var targetCoord = this.plugin.getCoordByName(player.getUniqueId(), targetCoordName);
         
         if (!this.plugin.playerHasCoord(player.getUniqueId(), targetCoord)) {
-            player.sendMessage(plugin.NAME + ChatColor.RED + "Coord not found.");
+            msgError("Coord not found.", player);
             return;
         }
 
@@ -332,7 +346,7 @@ public final class CoordListCommand implements TabExecutor {
 	}
 
     private void showHelp(final Player player) {
-		player.sendMessage(Utils.colorize(this.plugin.NAME + "&a---&8[&eHelp&8]&a---"));
+		msg(Utils.colorize("&a---&8[&eHelp&8]&a---"), player);
         player.sendMessage(Utils.colorize("&e/coordlist add &6<name>, &7Adds your current coords to your list."));
         player.sendMessage(Utils.colorize("&e/coordlist add &6<name> [x] [y] [z], &7Saves custom coords to your list."));
         player.sendMessage(Utils.colorize("&e/coordlist remove &6<name>, &7Deletes a saved coord from your list."));
@@ -385,5 +399,6 @@ public final class CoordListCommand implements TabExecutor {
 
         return new ArrayList<>();
     }
+
 }
 
