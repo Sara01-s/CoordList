@@ -1,4 +1,4 @@
-<p align="center"><img src="[https://github.com/Sara01-s/CoordList/blob/main/CoordListLogo.png](https://github.com/Sara01-s/CoordList/blob/main/CoordListLogo.png)"/></p>
+<p align="center"><img src="https://github.com/Sara01-s/CoordList/blob/main/CoordListLogo.png"/></p>
 <p align="center">A Minecraft Spigot plugin to manage your world coords.</p>
 
 ## Commands
