@@ -35,12 +35,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class CoordList extends JavaPlugin {
 
-    public final String NAME = Utils.colorize("&8[&aCoordList&8] ");
-	public CustomConfigFile<CoordList> fileHandler;
-    
-    private CoordsDatabase coordsDataBase;
-
-
+	public final String NAME = Utils.colorize("&8[&aCoordList&8] ");
+	private CoordsDatabase coordsDataBase;
+	
+	
 	@Override
 	public void onLoad() {
 		ConfigurationSerialization.registerClass(Coord.class, "Coord");
@@ -49,17 +47,17 @@ public final class CoordList extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.coordsDataBase = new CoordsDatabase(this);
-
+	
 		getCommand("coordlist").setExecutor(new CoordListCommand(this));
-        this.coordsDataBase.loadCoords();
-
+		this.coordsDataBase.loadCoords();
+	
 		log("Plugin enabled.");
 	}
 	
 	@Override
 	public void onDisable() {
-        this.coordsDataBase.saveAllCoords();
-        Bukkit.getScheduler().cancelTasks(this);
+		this.coordsDataBase.saveAllCoords();
+		Bukkit.getScheduler().cancelTasks(this);
 		log("Plugin disabled.");
 	}
 
