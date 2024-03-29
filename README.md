@@ -3,7 +3,7 @@
 
 ## Commands
 ### /coordlist help
-Not implemented yet.
+Shows a list of plugins commands and how to use them.
 ### /coordlist view
 See your saved coords.
 ### /coordlist add <coord name>
