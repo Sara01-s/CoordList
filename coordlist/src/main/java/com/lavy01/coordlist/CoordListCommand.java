@@ -2,8 +2,8 @@ package com.lavy01.coordlist;
 
 import static java.lang.Math.max;
 import static java.lang.Math.abs;
-import static java.lang.Math.clamp;
 
+import java.util.function.Consumer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,11 +18,9 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
 
 public final class CoordListCommand implements TabExecutor {
 	
@@ -246,8 +244,13 @@ public final class CoordListCommand implements TabExecutor {
 
         msgError("WARNING! this command will DELETE ALL your saved coords.", player);
 
+		new SpigotCallback(this.plugin);
+		Consumer<Player> clearCoordListCallback = targetPlayer -> {
+			forceClearCoordList(targetPlayer);
+		};
+
         final var promptYes = new TextComponent(ChatColor.GRAY + "- " + ChatColor.GREEN + ChatColor.UNDERLINE + "[yes]");
-            promptYes.setClickEvent(new ClickEvent(Action.RUN_COMMAND, "/coordlist forceclear"));
+            //promptYes.setClickEvent(new ClickEvent(Action.RUN_COMMAND, "/coordlist forceclear"));
             promptYes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
                                     new ComponentBuilder(ChatColor.GREEN + "Clear your coordlist").create()));
 
@@ -258,6 +261,9 @@ public final class CoordListCommand implements TabExecutor {
         player.sendMessage(ChatColor.BOLD + "" + ChatColor.GOLD + "Confirm coordlist clear?");
         player.spigot().sendMessage(promptYes);
         player.spigot().sendMessage(promptNo);
+
+		SpigotCallback.createCommand(promptYes, clearCoordListCallback);
+
 	}
 
     private void forceClearCoordList(final Player player) {
@@ -284,9 +290,9 @@ public final class CoordListCommand implements TabExecutor {
     private Vector getClampedCoords(final String x, final String y, final String z) {
         // Clamps the coords to reasonable values, althought 30_000_000 is considered "out of bounds"
         // this is used because some funny player could input something like 100000000000000000000000000000000000
-        final double _x = clamp(Double.parseDouble(x), -30_000_000, 30_000_000);
-        final double _y = clamp(Double.parseDouble(y), 0, 300);
-        final double _z = clamp(Double.parseDouble(z), -30_000_000, 30_000_000);
+        final double _x = Utils.clamp(Double.parseDouble(x), -30_000_000, 30_000_000);
+        final double _y = Utils.clamp(Double.parseDouble(y), 0, 300);
+        final double _z = Utils.clamp(Double.parseDouble(z), -30_000_000, 30_000_000);
 
         return new Vector(_x, _y, _z);
     }
