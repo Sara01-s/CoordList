@@ -2,9 +2,9 @@ author: Lavy01
 name: CoordList
 main: com.lavy01.coordlist.CoordList
 api: spigot
-version: 0.0.1
-api-version: 1.15
-description: Easy store for your favorite coordinates!
+version: 0.1.0
+api-version: 1.20
+description: A Minecraft Spigot plugin to manage your world coords.
 commands:
   coordlist:
-    usage: /<command> [help | add | remove | list | loop]
+    usage: /<command> [help | add | remove | rename | clear | view | track]

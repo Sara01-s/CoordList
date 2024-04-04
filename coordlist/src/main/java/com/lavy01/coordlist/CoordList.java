@@ -51,6 +51,8 @@ public final class CoordList extends JavaPlugin {
 		getCommand("coordlist").setExecutor(new CoordListCommand(this));
 		this.coordsDataBase.loadCoords();
 	
+        new SpigotCallback(this); // Allows to send java function callbacks as Minecraft commmands
+
 		log("Plugin enabled.");
 	}
 	

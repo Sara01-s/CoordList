@@ -58,11 +58,6 @@ public final class CoordListCommand implements TabExecutor {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("forceclear")) { // Prevent player for using this directly with permissions
-            forceClearCoordList(player);
-            return true;
-        }
-
         if (args[0].equalsIgnoreCase("view")) {
             if (args.length > 1) {
                 msg("Usage: /coordlist view", player);
@@ -244,11 +239,6 @@ public final class CoordListCommand implements TabExecutor {
 
         msgError("WARNING! this command will DELETE ALL your saved coords.", player);
 
-		new SpigotCallback(this.plugin);
-		Consumer<Player> clearCoordListCallback = targetPlayer -> {
-			forceClearCoordList(targetPlayer);
-		};
-
         final var promptYes = new TextComponent(ChatColor.GRAY + "- " + ChatColor.GREEN + ChatColor.UNDERLINE + "[yes]");
             //promptYes.setClickEvent(new ClickEvent(Action.RUN_COMMAND, "/coordlist forceclear"));
             promptYes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
@@ -257,13 +247,15 @@ public final class CoordListCommand implements TabExecutor {
         final var promptNo = new TextComponent(ChatColor.GRAY + "- " + ChatColor.RED + ChatColor.UNDERLINE + "[no]");
             promptNo.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
                                    new ComponentBuilder(ChatColor.RED + "Cancel").create()));
+        
+        Consumer<Player> clearCoordListCallback = targetPlayer -> {
+            forceClearCoordList(targetPlayer);
+        };
+        SpigotCallback.createCommand(promptYes, clearCoordListCallback);
 
         player.sendMessage(ChatColor.BOLD + "" + ChatColor.GOLD + "Confirm coordlist clear?");
         player.spigot().sendMessage(promptYes);
         player.spigot().sendMessage(promptNo);
-
-		SpigotCallback.createCommand(promptYes, clearCoordListCallback);
-
 	}
 
     private void forceClearCoordList(final Player player) {
