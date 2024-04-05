@@ -74,24 +74,24 @@ public final class CoordsDatabase {
     }
 
     public void loadCoords() {
-        final var dataConfigFile = this.configFile.getConfig();
+        final var coordsConfig = this.configFile.getConfig();
 
-        if (!dataConfigFile.contains(PLAYERS_DATA_ENTRY)) {
+        if (!coordsConfig.contains(PLAYERS_DATA_ENTRY)) {
             return;
         }
 
-        final var configSection = dataConfigFile.getConfigurationSection(this.PLAYERS_DATA_ENTRY);
+        final var configSection = coordsConfig.getConfigurationSection(this.PLAYERS_DATA_ENTRY);
         final var playerIds = configSection.getKeys(false);
-    
-        playerIds.forEach(playerId -> {
-            var coordsBuffer = this.configFile.getConfig().get(this.PLAYERS_DATA_ENTRY + playerId);
 
+        for (var playerId: playerIds) {
+            var coordsBuffer = this.configFile.getConfig().get(this.PLAYERS_DATA_ENTRY + playerId);
+    
             @SuppressWarnings("unchecked")
             var playerSavedCoords = (List<Coord>) coordsBuffer;
             
             playerCoords.put(UUID.fromString(playerId), playerSavedCoords);
-        });
-
+        }
+    
         this.plugin.log("Player coordlists loaded.");
     }
 
