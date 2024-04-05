@@ -16,6 +16,8 @@ Add a new coord with custom coordinates to your list.
 Change the name of a previously saved coord without losing the original coordinates.
 ### /coordlist remove <coord name>
 Remove a coord from your list.
+### /coordlist clear
+Deletes all your saved coords. Shows a confirmation prompt before doing it.
 ### /coordlist track <coord name>
 Start tracking a saved coord until reached or canceled.
 ### /coordlist track [x] [y] [z]
