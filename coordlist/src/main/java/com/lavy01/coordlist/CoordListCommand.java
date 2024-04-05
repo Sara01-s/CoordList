@@ -165,6 +165,11 @@ public final class CoordListCommand implements TabExecutor {
             return;
         }
 
+        if (this.plugin.playerHasCoord(player.getUniqueId(), this.plugin.getCoordByName(player.getUniqueId(), coordName))) {
+            msgError("A Coord named \"" + coordName + "\" is already present in your list.", player);
+            return;
+        }
+
         if (!isValidName(player, coordName)) {
             return;
         }

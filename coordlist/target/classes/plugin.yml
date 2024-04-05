@@ -10,3 +10,4 @@ commands:
     description: Access to all CoordList features using just this command.
     usage: /<command> [help | add | remove | rename | clear | view | track]
     aliases: [cl]
+    permission-message: "You do not have permission to do that."

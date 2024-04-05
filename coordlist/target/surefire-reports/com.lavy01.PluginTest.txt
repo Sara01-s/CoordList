@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.lavy01.PluginTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.036 s - in com.lavy01.PluginTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 s - in com.lavy01.PluginTest
