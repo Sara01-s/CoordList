@@ -59,9 +59,16 @@ public final class CoordListCommand implements TabExecutor {
         }
 
         if (args[0].equalsIgnoreCase("view")) {
-            if (args.length > 1) {
-                msg("Usage: /coordlist view", player);
+            // TODO: Continue page system implementation here
+            if (args.length > 1) { // Change to 2
+                msg("Usage: /coordlist view [page]", player);
                 return true;
+            }
+
+            if (args.length == 2) {
+                // Validate page number.
+                // call displayCoordList with corresponding page.
+                // return true;
             }
 
             displayCoordList(player);
