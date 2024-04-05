@@ -10,7 +10,6 @@
     
     Future considerations (Maybe I won't do it, but it would be great additions for the plugin):
         - Add support for all dimensions
-        - Add command aliases "cl"
         - Abstract the command logic to divide and make the CoordListCommand.java file more readable.
         - Implement permissions logic.
         - Make configurable variables, such as:
